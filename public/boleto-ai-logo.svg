@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 60" width="160" height="60">
+  <text font-size="32" font-family="Consolas, monospace" x="0" y="42" textLength="160" lengthAdjust="spacingAndGlyphs">
+    <tspan fill="#0D47A1">Boleto</tspan>
+    <tspan fill="#00E676">AI</tspan>
+  </text>
+</svg>
