@@ -26,7 +26,7 @@ export default function Dashboard({ user }: DashboardProps) {
   const { ticketsPaid, ticketsExpired, ticketsPendent, loading, lastUpdated } =
     useTickets();
   const [now, setNow] = useState(new Date());
-
+  console.log(now);
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 30000);
     return () => clearInterval(interval);

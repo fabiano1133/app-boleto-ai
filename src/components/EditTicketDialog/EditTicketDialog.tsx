@@ -103,9 +103,9 @@ export default function EditTicketDialog({
           currency: "BRL",
         })
       );
-      setStatus(ticket.status);
+      setStatus(status);
     }
-  }, [open, ticket, reset]);
+  }, [open, ticket, reset, status]);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>

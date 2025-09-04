@@ -1,7 +1,7 @@
 "use server";
 
 import { api } from "@/app/lib/http/axios";
-import axios from "axios";
+import { AxiosError } from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -29,22 +29,21 @@ export async function signin(email: string, password: string) {
     });
 
     return { success: true };
-  } catch (error: any) {
-    let message;
+  } catch (error: unknown) {
+    let message: string;
 
-    if (error.code === "ECONNREFUSED") {
-      message = `Serviço temporariamente indisponível`;
-      return {
-        error: message,
-      };
+    if (error instanceof AxiosError) {
+      if (error.code === "ECONNREFUSED") {
+        message = "Serviço temporariamente indisponível";
+        return { error: message };
+      }
+
+      message = error.response?.data.error;
+      return { error: message };
     }
 
-    if (axios.isAxiosError(error) && error.response) {
-      message = error.response.data.error || message;
-      return {
-        error: message,
-      };
-    }
+    message = "Erro inesperado. Tente novamente mais tarde.";
+    return { error: message };
   }
 }
 

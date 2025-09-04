@@ -26,7 +26,7 @@ export default function Signin() {
   const [isPending, startTransiction] = useTransition();
   const [error, setError] = useState("");
   const router = useRouter();
-
+  console.log(error);
   const {
     register,
     handleSubmit,

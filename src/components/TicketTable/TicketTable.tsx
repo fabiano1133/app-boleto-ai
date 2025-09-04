@@ -45,7 +45,7 @@ export default function TicketTable({ user }: TitcketTableProps) {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  console.log(error);
   const fetchTickets = async () => {
     setLoading(true);
     try {

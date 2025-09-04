@@ -27,6 +27,7 @@ import {
   createTicketSchema,
 } from "@/components/CreateTicketDialog/schema";
 import CustomSelect from "../Select/Select";
+import { AxiosError } from "axios";
 
 export const CreateTicketDialog = () => {
   const router = useRouter();
@@ -83,12 +84,15 @@ export const CreateTicketDialog = () => {
       reset();
       setValueMasked("R$ 0,00");
       setOpen(false);
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.error || "Erro ao criar boleto. Tente novamente.";
-      toast.error(message, {
-        position: "top-center",
-      });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const message =
+          error.response?.data.error ||
+          "Erro ao criar boleto. Tente novamente.";
+        toast.error(message, {
+          position: "top-center",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

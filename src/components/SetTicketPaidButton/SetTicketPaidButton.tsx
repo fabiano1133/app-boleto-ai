@@ -2,20 +2,18 @@
 
 import { Ticket } from "@/@types";
 import { Button } from "../ui/button";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { updateTicketToPaid } from "@/api/ticketService";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 interface SetTicektPaidProps {
   ticket: Ticket;
   onSuccess: () => void;
 }
 
-export const SetTicketPaidButton = ({
-  ticket,
-  onSuccess,
-}: SetTicektPaidProps) => {
+export const SetTicketPaidButton = ({ ticket }: SetTicektPaidProps) => {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -29,11 +27,13 @@ export const SetTicketPaidButton = ({
       });
       router.push("/tickets");
       // window.location.href = "/";
-    } catch (error: any) {
-      console.log("Erro ao tentar atualizar pagamento", error);
-      toast.error(error, {
-        position: "top-center",
-      });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.log("Erro ao tentar atualizar pagamento", error);
+        toast.error(error.response?.data.error, {
+          position: "top-center",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

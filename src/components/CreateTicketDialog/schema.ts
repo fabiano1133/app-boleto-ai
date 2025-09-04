@@ -35,11 +35,16 @@ export type CreateTicketFormData = yup.InferType<typeof createTicketSchema>;
 export const editTicketYupSchema = yup.object({
   title: yup.string().required("Título é obrigatório."),
   expirationDate: yup
-    .date()
+    .string()
     .required("Data de vencimento é obrigatória.")
-    .min(
-      getTodayWithoutTime(),
-      "A data de vencimento não pode ser anterior a hoje"
+    .test(
+      "min-today",
+      "A data de vencimento não pode ser anterior a hoje",
+      (value) => {
+        if (!value) return false;
+        const inputDate = new Date(value + "T00:00:00");
+        return inputDate >= getTodayWithoutTime();
+      }
     ),
   value: yup
     .number()
