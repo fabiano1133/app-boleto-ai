@@ -21,12 +21,14 @@ import { LoginFormData, loginSchema } from "./schema";
 import SigninButton from "./signin-button";
 import { signin } from "@/app/auth/sign-in/action";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 export default function Signin() {
   const [isPending, startTransiction] = useTransition();
-  const [error, setError] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
-  console.log(error);
   const {
     register,
     handleSubmit,
@@ -43,8 +45,8 @@ export default function Signin() {
         const { email, password } = data;
 
         const result = await signin(email, password);
-
-        if (result?.error) {
+        setIsLoading(true);
+        if (result?.error || !result) {
           toast.error(result.error, {
             position: "top-right",
           });
@@ -54,13 +56,14 @@ export default function Signin() {
           });
           router.push("/dashboard");
         }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        setError("Erro inesperado ao tentar realizar o login");
-        toast.warning(err?.response.data.error, {
-          position: "top-right",
-        });
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          toast.error(error.response?.data.error, {
+            position: "top-right",
+          });
+        }
+      } finally {
+        setIsLoading(false);
       }
     });
   };
@@ -119,7 +122,7 @@ export default function Signin() {
             </CardContent>
 
             <CardFooter className="pt-4 flex-col">
-              <SigninButton disabled={isPending}>
+              <SigninButton disabled={isPending || isLoading}>
                 {isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (

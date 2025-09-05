@@ -10,6 +10,7 @@ import {
   Handshake,
 } from "lucide-react";
 import { AlreadyAccountButton } from "@/components/AlreadyAccountButton/already-account-button";
+import Link from "next/link";
 
 export default function Home() {
   const iconsMap: Record<string, React.ElementType> = {
@@ -54,68 +55,97 @@ export default function Home() {
 
   return (
     <div className=" flex flex-col min-h-screen bg-white">
-      <header className="bg-sky-950 h-12 flex justify-between p-4 md:p-6 items-center fixed top-0 left-0 w-full shadow-md z-50">
-        <div>
-          <Image
-            alt="logo-header-boleto-ai"
-            src={"/boleto-ai-logo.svg"}
-            width={100}
-            height={100}
-          />
-        </div>
+      <header className="bg-amber-50 h-20 flex justify-between p-4 md:p-6 items-center fixed top-0 left-0 w-full shadow-md z-50">
+        <nav className="container mx-auto flex justify-between items-center">
+          <Link href="/" aria-label="Página inicial">
+            <Image
+              alt="Logo Boleto AI"
+              src="/boleto-ai-logo.svg"
+              width={120}
+              height={40}
+              priority
+            />
+          </Link>
+          <div className="hidden md:flex gap-3">
+            <LoginPageButton />
+            <AlreadyAccountButton />
+          </div>
+        </nav>
+        <div className="max-w-7xl mx-auto flex justify-between items-center p-4 md:p-6"></div>
       </header>
       <PageWrapper>
-        <main className="flex-1 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mt-6 p-8 md:p-0">
-          {/* {Bloco de Imagem} */}
-          <div className="flex justify-center">
-            <Image
-              className="w-full max-w-xs md:max-w-md rounded-4xl"
-              alt="hero"
-              src={"/hero-image.png"}
-              width={380}
-              height={200}
-            />
-          </div>
+        <main className="flex-1 flex flex-col items-center justify-center mt-25 md:mt-20">
+          {/* {Hero Section} */}
 
-          {/* {Bloco de Texto} */}
-          <div className="">
-            <div className="flex flex-col items-start text-left space-y-6">
-              <h1 className="text-2xl md:text-5xl font-bold text-indigo-900 drop-shadow-2xl">
+          <section
+            aria-labelledby="hero-title"
+            className="flex flex-col md:flex-row items-center justify-between gap-8 px-6 md:px-12 lg:px-20 w-full max-w-7xl"
+          >
+            {/* Texto */}
+            <div className="flex-1 space-y-6 text-left">
+              <h1
+                id="hero-title"
+                className="text-3xl md:text-5xl font-bold text-indigo-900 drop-shadow"
+              >
                 Simplifique a gestão de boletos
               </h1>
-              <p className="text-slate-800 text-base md:text-xl text-wrap">
-                Centralize todos os seus boletos e otimize o fluxo financeiro
-                <br /> do seu negócio com tecnologia inteligente.
+              <p className="text-slate-800 text-base md:text-lg leading-relaxed">
+                Centralize todos os seus boletos e otimize o fluxo financeiro do
+                seu negócio com tecnologia inteligente.
               </p>
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <LoginPageButton />
                 <AlreadyAccountButton />
               </div>
             </div>
-          </div>
+
+            <div className="flex-1 hidden md:flex justify-center">
+              <Image
+                src="/section-hero-image-home.png"
+                alt="Ilustração de gestão de boletos"
+                width={500}
+                height={300}
+                className="object-contain rounded-b-4xl"
+              />
+            </div>
+          </section>
+
+          {/* Features Section */}
+          <section
+            aria-labelledby="features-title"
+            className="w-full max-w-7xl px-6 md:px-12 lg:px-20 py-12"
+          >
+            <h2 id="features-title" className="sr-only">
+              Benefícios do sistema
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {cardProperties.map((card) => {
+                const Icon = iconsMap[card.icon];
+                return (
+                  <article
+                    key={card.id}
+                    className="p-6 rounded-2xl shadow-sm md:shadow-md bg-white hover:shadow-lg transition"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      {Icon && <Icon className="text-sky-950 w-6 h-6" />}
+                      <h3 className="font-semibold text-sky-900">
+                        {card.title}
+                      </h3>
+                    </div>
+                    <p className="text-sm text-slate-700 leading-relaxed">
+                      {card.description}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
         </main>
-        <div className="flex flex-col justify-center items-center gap-3 md:flex md:flex-row md:gap-3 mb-8 md:mb-0">
-          {cardProperties.flatMap((card) => {
-            const Icon = iconsMap[card.icon];
-            return (
-              <div
-                key={card.id}
-                className="min-w-[250px] max-w-[430px] h-[158px] p-6 rounded-2xl shadow-sm md:shadow-md md:flex-1 md:min-w-[250px] md:max-w-[300px] md:h-[200px]"
-              >
-                <div className="flex flex-row gap-2">
-                  {Icon && <Icon className="text-sky-950" />}
-                  <h3 className="font-semibold text-sky-900">{card.title}</h3>
-                </div>
-                <div>
-                  <p className="text-md text-sky-950 mt-2 text-justify">
-                    {card.description}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </PageWrapper>
+      {/* Footer */}
+      <footer className="bg-sky-950 text-white py-4 text-center text-sm">
+        © {new Date().getFullYear()} Boleto AI. Todos os direitos reservados.
+      </footer>
     </div>
   );
 }

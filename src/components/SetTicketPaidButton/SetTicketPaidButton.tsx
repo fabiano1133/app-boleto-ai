@@ -26,12 +26,10 @@ export const SetTicketPaidButton = ({ ticket }: SetTicektPaidProps) => {
         position: "top-center",
       });
       router.push("/tickets");
-      // window.location.href = "/";
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        console.log("Erro ao tentar atualizar pagamento", error);
         toast.error(error.response?.data.error, {
-          position: "top-center",
+          position: "top-right",
         });
       }
     } finally {
