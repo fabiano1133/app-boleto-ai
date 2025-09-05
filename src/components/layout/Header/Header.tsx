@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { JwtPayload } from "@/api/auth/ultils";
 import SheetProfile from "@/components/CustomSheet/SheetProfile";
+import { useState } from "react";
 
 interface HeaderProps {
   user?: JwtPayload | null;
@@ -14,76 +15,106 @@ interface HeaderProps {
 export default function Header({ user }: HeaderProps) {
   const pathname = usePathname();
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const isActive = (href: string) => pathname === href;
 
+  const navLinks = [
+    { href: "/dashboard", label: "Resumo" },
+    { href: "/tickets", label: "Boletos" },
+    { href: "/reports", label: "Relatórios" },
+    { href: "/smart-finance", label: "Assistente Financeiro" },
+  ];
+
   return (
-    <header className="flex top-0 left-0 right-0 z-50 shadow-sm bg-gray-800 h-16 justify-between p-8 fixed w-full">
-      <div className="flex items-center gap-3">
-        <Link href={"/"}>
-          <Image src="/boleto-ai-logo.svg" alt="Logo" width={110} height={40} />
-        </Link>
+    <header className="fixed top-0 left-0 w-full z-50 bg-gray-800 shadow-sm">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <Link href="/">
+            <Image
+              src="/boleto-ai-logo.svg"
+              alt="Logo"
+              width={110}
+              height={40}
+            />
+          </Link>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-8 text-amber-100 font-medium">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href}>
+              <span
+                className={`font-sans font-normal transition-colors ${
+                  isActive(link.href)
+                    ? "text-green-400 border-b-2 border-green-400 pb-1"
+                    : "text-white hover:text-green-600"
+                }`}
+              >
+                {link.label}
+              </span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* Profile + Mobile menu button */}
+        <div className="flex items-center gap-4">
+          <SheetProfile user={user} />
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden text-white focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {menuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <nav className="hidden md:flex items-center gap-8 text-amber-100 font-medium">
-        <Link href="/dashboard">
-          <span
-            className={`font-sans font-normal transition-colors ${
-              isActive("/dashboard")
-                ? "text-green-400 border-b-2 border-green-400 pb-1"
-                : "text-white hover:text-green-600"
-            }`}
-          >
-            Resumo
-          </span>
-        </Link>
-        <Link href={"/tickets"}>
-          <span
-            className={`font-sans font-normal transition-colors ${
-              isActive("/tickets")
-                ? "text-green-400 border-b-2 border-green-400 pb-1"
-                : "text-white hover:text-green-600"
-            }`}
-          >
-            Boletos
-          </span>
-        </Link>
-        <Link href={"/reports"}>
-          <span
-            className={`font-sans font-normal transition-colors ${
-              isActive("/reports")
-                ? "text-green-400 border-b-2 border-green-400 pb-1"
-                : "text-white hover:text-green-600"
-            }`}
-          >
-            Relatórios
-          </span>
-        </Link>
-        {/* <Link  href={"/bank-account"}>
-          <span
-            className={`font-sans font-normal transition-colors ${
-              isActive("/bank-account")
-                ? "text-green-400 border-b-2 border-green-400 pb-1"
-                : "text-white hover:text-green-600"
-            }`}
-          >
-            Conta Digital
-          </span>
-        </Link> */}
-        <Link href={"/smart-finance"}>
-          <span
-            className={`font-sans font-normal transition-colors ${
-              isActive("/smart-finance")
-                ? "text-green-400 border-b-2 border-green-400 pb-1"
-                : "text-white hover:text-green-600"
-            }`}
-          >
-            Assistente Financeiro
-          </span>
-        </Link>
-      </nav>
-      {/* {Avatar} */}
-      <div className="flex items-center">
-        <SheetProfile user={user} />
+      {/* Mobile Navigation */}
+
+      <div
+        className={`md:hidden bg-gray-800 text-amber-100 px-4 overflow-hidden transition-all duration-300 ease-in-out ${
+          menuOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <nav className="flex flex-col gap-2 py-2">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href}>
+              <span
+                className={`block font-sans font-normal transition-colors ${
+                  isActive(link.href)
+                    ? "text-green-400 border-b-2 border-green-400 pb-1"
+                    : "text-white hover:text-green-600"
+                }`}
+              >
+                {link.label}
+              </span>
+            </Link>
+          ))}
+        </nav>
       </div>
     </header>
   );

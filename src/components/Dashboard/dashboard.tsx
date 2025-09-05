@@ -47,20 +47,22 @@ export default function Dashboard({ user }: DashboardProps) {
           <Loader />
         ) : (
           <PageWrapper>
-            <main className="flex flex-col gap-8 px-6 py-8 max-w-7xl mx-auto">
-              <header className="flex justify-between items-center">
+            <main className="flex flex-col gap-6 px-4 py-6 md:gap-8 md:px-6 md:py-8 max-w-7xl mx-auto">
+              <header className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center mt-8 sm:mt-0 md:mt-0">
                 <div>
-                  <h1 className="text-3xl font-semibold tracking-tight">
+                  <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
                     Olá, {user?.name}
                   </h1>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm md:text-base text-muted-foreground">
                     Aqui está o resumo da sua operação hoje.
                   </p>
                 </div>
-                <CreateTicketDialog />
+                <div className="self-start md:self-auto">
+                  <CreateTicketDialog />
+                </div>
               </header>
 
-              <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <section className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6 w-full">
                 <TicketCard
                   title="Boletos Pagos"
                   description="Confirmados este mês"
